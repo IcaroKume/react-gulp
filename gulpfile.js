@@ -5,8 +5,9 @@ var browseify = require('browserify');
 var watchify = require('watchify');
 var babelify = require('babelify');
 var path = require('path');
+var server = require('gulp-server-livereload');
 
-gulp.task('default', function() { // default, just gulp
+gulp.task('build', function() { // default, just gulp
     var bundler = watchify(browseify({
         entries: ['./src/app.jsx'],
         extensions: ['.jsx'],
@@ -35,3 +36,22 @@ gulp.task('default', function() { // default, just gulp
 
     return
 });
+
+gulp.task('serve', function(done) {
+  gulp.src('')
+    .pipe(server({
+      livereload: {
+        enable: true,
+        filter: function(filePath, cb) {
+          if(/main.js/.test(filePath)) {
+            cb(true)
+          } else if(/style.css/.test(filePath)){
+            cb(true)
+          }
+        }
+      },
+      open: true
+    }));
+});
+
+gulp.task('default', ['build', 'serve']);
